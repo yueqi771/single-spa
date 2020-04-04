@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script src="../lib/umd/single-spa-bundle.js"></script>
+    <script>
+        console.log(singleSpa);
+        ((global) => {
+            let singleSpa = global.singleSpa;
+            singleSpa.registerApplication(
+                'app1',
+                () => Promise.resolve({}),
+                function(location) {
+                    // return location.hash === '#/home'
+                    return true
+                }
+            
+            )
+        })(window)
+    </script>
+</body>
+</html>
