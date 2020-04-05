@@ -1,4 +1,4 @@
-import { NOT_LOADED, notLoadError, notSkip, isntLoaded, shouldBeActivity } from './appsHelper';
+import { NOT_LOADED, notLoadError, notSkip, isActive, isntLoaded, shouldBeActivity, shouldntBeActivity, isLoaded, isntActive,   } from './appsHelper';
 import { invoke } from '../navigations/invoke';
 
 /**
@@ -10,7 +10,7 @@ import { invoke } from '../navigations/invoke';
  * return Promise
  */
 const APPS = []
-export function registerApplication(appName, loadFunction, activityWhen, customProps) {
+export function registerApplication(appName, loadFunction, activityWhen, customProps = {}) {
     // 判断参数是否合法
     if(!appName || typeof appName !== 'string') {
         throw new Error('appName不可以是一个空字符串')
@@ -43,3 +43,17 @@ export function getAppsToLoad() {
     return APPS.filter(notSkip).filter(notLoadError).filter(isntLoaded).filter(shouldBeActivity)
 }
 
+export function getAppsToUnmount() {
+    return APPS.filter(notSkip).filter(isActive).filter(shouldntBeActivity)
+}
+
+export function getAppsTomount() {
+    return APPS.filter(notSkip).filter(isLoaded).filter(isntActive).filter(shouldBeActivity)
+}
+
+// 获取当前已经挂载的app
+export function getMountedApps() {
+    return APPS.filter(app => {
+        return isActive(app)
+    })
+}

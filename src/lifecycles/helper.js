@@ -12,7 +12,7 @@ export function smelLikeAPromise(promise) {
  * @param {*} description 
  */
 export function flattenLifecyclesArray(lifecycles, description) {
-    if(Array.isArray(lifecycles)) {
+    if(!Array.isArray(lifecycles)) {
         lifecycles = [lifecycles]
     }
 
@@ -20,11 +20,11 @@ export function flattenLifecyclesArray(lifecycles, description) {
         lifecycles = [() => Promise.resolve()]
     }
 
-    return new Promise((resolve, reject) => {
+    return props => new Promise((resolve, reject) => {
         waitForPromises(0)
-
+        
         function waitForPromises(index) {
-            let fn = lifeCycles[index]();
+            let fn = lifecycles[index](props);
 
             if(!smelLikeAPromise(fn)) {
                 reject(new Error(`${description} has error`))
@@ -40,3 +40,14 @@ export function flattenLifecyclesArray(lifecycles, description) {
         }
     })
 }
+
+/**
+ * 
+ */
+export function getProps(app) {
+    return {
+        name: app.name,
+        ...app.customProps
+    }
+}
+

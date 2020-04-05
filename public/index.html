@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <a href="#/home">加载appA</a>
+    <a href="#/index">加载appB</a>
+    <div id="app"></div>
+
+    <script src="../lib/umd/single-spa-bundle.js"></script>
+    <script>
+        ((global) => {
+            function loadScript(appName) {
+                let script = document.createElement('script');
+
+                script.src = `/public/${appName}.js`;
+
+                document.body.appendChild(script);
+
+                return new Promise((resolve, reject) => {
+                    script.onload = function() {
+                        resolve(window[appName])
+                        script.parentNode.removeChild(script)
+                    }
+
+                    script.onerror = reject
+                })
+            }
+
+            let singleSpa = global.singleSpa;
+            singleSpa.registerApplication(
+                'appA',
+                () => loadScript('appA'),
+                function(location) {
+                    return location.hash === '#/home'
+                },
+                {
+                    nameAs: '越祈'
+                }
+            )
+
+            singleSpa.registerApplication(
+                'appB',
+                () => loadScript('appB'),
+                function(location) {
+                    return location.hash === '#/index'
+                },
+                {
+                    nameAs: '越祈'
+                }
+            )
+
+            singleSpa.start()
+        })(window)
+    </script>
+</body>
+</html>

@@ -22,7 +22,7 @@ export default {
         process.env.SERVER ? server({
             open: true, 
             contentBase: '',
-            openPage: 'toutrial/index.html',
+            openPage: 'public/index.html',
             port: '3303'
         }) : null
     ]
